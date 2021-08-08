@@ -9,23 +9,28 @@ const create = () => {
 	const startDate = dayjs()
 	let currentDate = startDate
 	let timer: NodeJS.Timer = undefined as any
+	let running = false
 
 	const start = () => {
 		timer = setInterval(() => {
-			console.log('engine update')
-			currentDate = currentDate.add(113, 'minute')
+			currentDate = currentDate.add(1133, 'minute')
 		}, 100)
+		running = true
 	}
 
 	const getDate = () => currentDate
+	const getRunning = () => running
 
-	const stop = () => clearInterval(timer)
+	const stop = () => {
+		running = false
+		clearInterval(timer)
+	}
 
 	return {
 		getDate,
 		start,
 		stop,
-		running: !!timer,
+		getRunning,
 	}
 }
 

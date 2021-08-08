@@ -5,7 +5,7 @@ const useLife = () => {
 	const life = createLife()
 	const [date, setDate] = useState(life.getDate())
 	const [intervalID, setIntervalID] = useState(-1)
-	const [running, setRunning] = useState(life.running)
+	const [running, setRunning] = useState(life.getRunning())
 
 	console.log('uselife rerender', date, running)
 
@@ -14,6 +14,7 @@ const useLife = () => {
 		setIntervalID(
 			setInterval(() => {
 				setDate(life.getDate())
+				setRunning(life.getRunning())
 			}) as any,
 		)
 	}
@@ -28,6 +29,7 @@ const useLife = () => {
 	return {
 		date,
 		start,
+		running,
 	}
 }
 
