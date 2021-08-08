@@ -1,0 +1,33 @@
+// Place your settings in this file to overwrite default and user settings.
+{
+	"typescript.format.insertSpaceAfterOpeningAndBeforeClosingTemplateStringBraces": true,
+	"typescript.format.insertSpaceAfterOpeningAndBeforeClosingJsxExpressionBraces": true,
+	"javascript.format.insertSpaceAfterOpeningAndBeforeClosingTemplateStringBraces": true,
+	"javascript.format.insertSpaceAfterOpeningAndBeforeClosingJsxExpressionBraces": true,
+	// The number of spaces a tab is equal to. This setting is overriden
+	// based on the file contents when `editor.detectIndentation` is true.
+	"editor.tabSize": 4,
+	// Insert spaces when pressing Tab. This setting is overriden
+	// based on the file contents when `editor.detectIndentation` is true.
+	"editor.insertSpaces": false,
+	// When opening a file, `editor.tabSize` and `editor.insertSpaces`
+	// will be detected based on the file contents. Set to false to keep
+	// the values you've explicitly set, above.
+	"editor.detectIndentation": false,
+	"typescript.tsdk": "./node_modules/typescript/lib",
+	"eslint.workingDirectories": ["./src"],
+	"eslint.codeAction.disableRuleComment": {
+		"enabled": true
+	},
+	"eslint.lintTask.enable": false,
+	"files.autoSave": "off",
+	"editor.formatOnSave": true,
+	"editor.codeActionsOnSave": {
+		"source.fixAll.eslint": true
+	},
+	"eslint.nodePath": "./node_modules/",
+	"editor.defaultFormatter": "esbenp.prettier-vscode",
+
+	// Needed for cypressHelper's 'open with cypress'
+	"terminal.integrated.shellArgs.windows": ["-ExecutionPolicy", "Bypass"]
+}
