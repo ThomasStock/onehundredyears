@@ -1,27 +1,30 @@
+import { Dayjs } from 'dayjs'
 import { useEffect, useState } from 'react'
 import createLife from '.'
 
 const useLife = () => {
-	const life = createLife()
-	const [date, setDate] = useState(life.getDate())
-	const [intervalID, setIntervalID] = useState(-1)
-	const [running, setRunning] = useState(life.getRunning())
+	const onDateChanged = (newDate: Dayjs) => {
+		setDate(newDate)
+	}
+	const onRunningChanged = (newRunning: boolean) => {
+		setRunning(newRunning)
+	}
 
-	console.log('uselife rerender', date, running)
+	const life = createLife({ onDateChanged, onRunningChanged })
+	const [date, setDate] = useState(life.getDate())
+	const [running, setRunning] = useState(life.getRunning())
 
 	const start = () => {
 		life.start()
-		setIntervalID(
-			setInterval(() => {
-				setDate(life.getDate())
-				setRunning(life.getRunning())
-			}) as any,
-		)
+	}
+
+	const stop = () => {
+		life.stop()
 	}
 
 	useEffect(
 		() => () => {
-			clearTimeout(intervalID)
+			life.stop()
 		},
 		[],
 	)
@@ -29,6 +32,7 @@ const useLife = () => {
 	return {
 		date,
 		start,
+		stop,
 		running,
 	}
 }
