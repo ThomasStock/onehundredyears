@@ -1,44 +1,64 @@
-import dayjs from 'dayjs'
+import dayjs, { Dayjs } from 'dayjs'
 import 'dayjs/locale/nl-be'
 import localizedFormat from 'dayjs/plugin/localizedFormat'
 dayjs.extend(localizedFormat)
 
 dayjs.locale('nl-be')
 
-const create = ({ onDateChanged, onRunningChanged }: any) => {
+export interface Life {
+	date: Dayjs
+	running: boolean
+	start: () => void
+	stop: () => void
+	getAge: () => number
+}
+
+type OnUpdate = (newLife: Life) => void
+
+interface Params {
+	onUpdate: OnUpdate
+}
+
+const create = ({ onUpdate }: Params): Life => {
 	const startDate = dayjs()
-	let currentDate = startDate
-	let timer: NodeJS.Timer = undefined as any
-	let running = false
 
 	const start = () => {
 		console.log('starting')
 		timer = setInterval(() => {
-			currentDate = currentDate.add(1133, 'minute')
-			onDateChanged(currentDate)
+			life = {
+				...life,
+				date: life.date.add(1133, 'minute').add(3, 'day'),
+				running: true,
+			}
+			onUpdate(life)
 		}, 100)
-		running = true
-		onRunningChanged(running)
 		console.log('started', timer)
 	}
 
-	const getDate = () => currentDate
-	const getRunning = () => running
-
 	const stop = () => {
 		console.log('stopping', timer)
-		running = false
-		onRunningChanged(running)
+		life = {
+			...life,
+			running: false,
+		}
+		onUpdate(life)
 		clearInterval(timer)
 		console.log('stopped')
 	}
 
-	return {
-		getDate,
+	const getAge = () => life.date.diff(startDate, 'year')
+
+	let life: Life = {
+		date: startDate,
+		running: false,
 		start,
 		stop,
-		getRunning,
+		getAge,
 	}
+
+	let timer: NodeJS.Timer = undefined as any
+
+	return life
 }
 
 export default create

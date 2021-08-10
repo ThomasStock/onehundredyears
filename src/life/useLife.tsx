@@ -1,26 +1,14 @@
-import { Dayjs } from 'dayjs'
 import { useEffect, useState } from 'react'
-import createLife from '.'
+import createLife, { Life } from '.'
 
 const useLife = () => {
-	const onDateChanged = (newDate: Dayjs) => {
-		setDate(newDate)
-	}
-	const onRunningChanged = (newRunning: boolean) => {
-		setRunning(newRunning)
-	}
+	const onUpdate = (newLife: Life) => setLife(newLife)
 
-	const life = createLife({ onDateChanged, onRunningChanged })
-	const [date, setDate] = useState(life.getDate())
-	const [running, setRunning] = useState(life.getRunning())
+	const [life, setLife] = useState(createLife({ onUpdate }))
 
-	const start = () => {
-		life.start()
-	}
+	const start = () => life.start()
 
-	const stop = () => {
-		life.stop()
-	}
+	const stop = () => life.stop()
 
 	useEffect(
 		() => () => {
@@ -30,10 +18,9 @@ const useLife = () => {
 	)
 
 	return {
-		date,
+		...life,
 		start,
 		stop,
-		running,
 	}
 }
 
