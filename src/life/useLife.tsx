@@ -1,22 +1,30 @@
 import dayjs from 'dayjs'
-import { useReducer } from 'react'
+import { useMemo, useReducer } from 'react'
 import { init, reducer } from './reducer'
 import anime, { AnimeInstance } from 'animejs'
-import { getNewEvent, getNextEvent } from './events'
+import { getNextEvent } from './events/utils'
 
 let animation: AnimeInstance
 
 const useLife = () => {
 	const [state, dispatch] = useReducer(reducer, dayjs(), init)
+	const { date, events } = state
+	const nextEvent = useMemo(() => getNextEvent(events), [events])
+	const currentEvent = nextEvent.date.valueOf() === date.valueOf() ? nextEvent : undefined
+	console.log('nextEvent.valueOf() ', nextEvent.date.valueOf(), date.valueOf())
 
 	const start = () => {
 		dispatch({ type: 'start' })
 
-		const currentAnimation = { ticks: state.date.valueOf() }
-		const nextEvent = getNextEvent(state.events)
+		if (animation && !animation.completed) {
+			animation.play()
+			return
+		}
+
+		const currentAnimation = { ticks: date.valueOf() }
 		animation = anime({
 			targets: currentAnimation,
-			ticks: nextEvent.valueOf(),
+			ticks: nextEvent.date.valueOf(),
 			duration: 4000,
 
 			change: (anim) => {
@@ -29,27 +37,20 @@ const useLife = () => {
 				}
 			},
 			complete: () => {
+				dispatch({ type: 'progress', payload: nextEvent.date })
 				dispatch({ type: 'stop' })
-				dispatch({ type: 'newEvent', payload: getNewEvent(nextEvent) })
 			},
 		})
 	}
-
-	// useInterval(() => {
-	// 	if (state.running) {
-	// 		dispatch({ type: 'progress', payload: state.date.add(1, steps[0]) })
-	// 	}
-	// }, speeds[0])
 
 	const stop = () => {
 		animation.pause()
 		dispatch({ type: 'stop' })
 	}
 
-	// useEffect(() => () => {}, [])
-
 	return {
 		...state,
+		currentEvent,
 		start,
 		stop,
 	}

@@ -1,19 +1,23 @@
 import { Dayjs } from 'dayjs'
-import { getNewEvent } from './events'
+import pickParents from './events/data/pickParents'
+import { EventData } from './events/types'
+import { generateEvent } from './events/utils'
 
 interface State {
 	birthDate: Dayjs
 	date: Dayjs
 	running: boolean
-	events: Dayjs[]
+	events: EventData[]
 }
 
-export const init = (date: Dayjs): State => ({
-	birthDate: date,
-	date,
-	running: false,
-	events: [getNewEvent(date)],
-})
+export const init = (birthDate: Dayjs): State => {
+	return {
+		birthDate,
+		date: birthDate,
+		running: false,
+		events: [generateEvent(birthDate, pickParents)],
+	}
+}
 
 export const reducer = (state: State, action: { type: string; payload?: any }): State => {
 	switch (action.type) {
