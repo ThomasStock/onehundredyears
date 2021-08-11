@@ -1,24 +1,55 @@
-import { useEffect, useState } from 'react'
-import createLife, { Life } from '.'
+import dayjs from 'dayjs'
+import { useReducer } from 'react'
+import { init, reducer } from './reducer'
+import anime, { AnimeInstance } from 'animejs'
+import { getNewEvent, getNextEvent } from './events'
+
+let animation: AnimeInstance
 
 const useLife = () => {
-	const onUpdate = (newLife: Life) => setLife(newLife)
+	const [state, dispatch] = useReducer(reducer, dayjs(), init)
 
-	const [life, setLife] = useState(createLife({ onUpdate }))
+	const start = () => {
+		dispatch({ type: 'start' })
 
-	const start = () => life.start()
+		const currentAnimation = { ticks: state.date.valueOf() }
+		const nextEvent = getNextEvent(state.events)
+		animation = anime({
+			targets: currentAnimation,
+			ticks: nextEvent.valueOf(),
+			duration: 4000,
 
-	const stop = () => life.stop()
+			change: (anim) => {
+				dispatch({ type: 'progress', payload: dayjs(currentAnimation.ticks) })
+			},
+			easing: function (el, i, total) {
+				const pow = Math.pow
+				return function (x) {
+					return x < 0.5 ? x * x * x * x * x * x * x : 1 - pow(-2 * x + 2, 3) / 2
+				}
+			},
+			complete: () => {
+				dispatch({ type: 'stop' })
+				dispatch({ type: 'newEvent', payload: getNewEvent(nextEvent) })
+			},
+		})
+	}
 
-	useEffect(
-		() => () => {
-			life.stop()
-		},
-		[],
-	)
+	// useInterval(() => {
+	// 	if (state.running) {
+	// 		dispatch({ type: 'progress', payload: state.date.add(1, steps[0]) })
+	// 	}
+	// }, speeds[0])
+
+	const stop = () => {
+		animation.pause()
+		dispatch({ type: 'stop' })
+	}
+
+	// useEffect(() => () => {}, [])
 
 	return {
-		...life,
+		...state,
 		start,
 		stop,
 	}
