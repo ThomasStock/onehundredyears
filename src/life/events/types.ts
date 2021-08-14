@@ -1,4 +1,5 @@
 import { Dayjs } from 'dayjs'
+import React from 'react'
 
 interface EventAge {
 	min?: number
@@ -14,6 +15,7 @@ interface ChoiceData {
 export interface EventConfig {
 	key: string
 	title: string
+	description: string | React.FunctionComponent
 	chance: number
 	age: EventAge
 	choices: ChoiceData[]

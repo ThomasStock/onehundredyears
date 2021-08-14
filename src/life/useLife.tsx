@@ -1,5 +1,5 @@
 import dayjs from 'dayjs'
-import { useMemo, useReducer } from 'react'
+import { useEffect, useMemo, useReducer } from 'react'
 import { init, reducer } from './reducer'
 import anime, { AnimeInstance } from 'animejs'
 import { getNextEvent } from './events/utils'
@@ -11,7 +11,8 @@ const useLife = () => {
 	const { date, events } = state
 	const nextEvent = useMemo(() => getNextEvent(events), [events])
 	const currentEvent = nextEvent.date.valueOf() === date.valueOf() ? nextEvent : undefined
-	console.log('nextEvent.valueOf() ', nextEvent.date.valueOf(), date.valueOf())
+
+	useEffect(() => start(), [])
 
 	const start = () => {
 		dispatch({ type: 'start' })
@@ -25,7 +26,7 @@ const useLife = () => {
 		animation = anime({
 			targets: currentAnimation,
 			ticks: nextEvent.date.valueOf(),
-			duration: 4000,
+			duration: 40,
 
 			change: (anim) => {
 				dispatch({ type: 'progress', payload: dayjs(currentAnimation.ticks) })

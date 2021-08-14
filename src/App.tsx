@@ -15,7 +15,6 @@ const App = () => {
 	const toggleTime = () => (running ? stop() : start())
 
 	const age = date.diff(birthDate, 'year')
-	console.log('currentEvent', currentEvent)
 
 	return (
 		<Container maxWidth="sm">
@@ -25,7 +24,6 @@ const App = () => {
 			<br />
 			<br />
 			<Typography>{date.format('LL LT')}</Typography>
-			<br />
 
 			<Typography>
 				Je bent {age} jaar. (Geboren op {birthDate.format('LL')})

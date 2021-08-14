@@ -29,3 +29,5 @@ export const generateEvent = (birthDate: Dayjs, { age, key }: EventConfig) => {
 export const getNextEvent = (events: EventData[]) => {
 	return events[events.length - 1]
 }
+
+export const getRandomFromArray = (array: any[]) => array[Math.floor(Math.random() * array.length)]
