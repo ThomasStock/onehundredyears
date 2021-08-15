@@ -1,13 +1,16 @@
 import { Box, Button, Typography } from '@material-ui/core'
+import { Dispatch } from 'react'
 import registry from './registry'
-import { EventConfig, EventData } from './types'
+import { EventConfig, EventDate } from './types'
 
 interface Props {
-	eventData: EventData
+	eventDate: EventDate
+	dispatch: Dispatch<{ type: string; payload: any }>
 }
 
-const EventComponent = ({ eventData }: Props) => {
-	const eventConfig = registry.get(eventData.key) as EventConfig
+const EventComponent = ({ eventDate, dispatch }: Props) => {
+	console.log('eventDate', eventDate)
+	const eventConfig = registry.get(eventDate.key) as EventConfig
 	const { choices, title, description } = eventConfig
 	const Description = typeof description === 'string' ? () => <Typography>{description}</Typography> : description
 	return (
@@ -22,7 +25,7 @@ const EventComponent = ({ eventData }: Props) => {
 				{choices.map((choice) => {
 					return (
 						<Box key={choice.key} marginBottom={1}>
-							<Button onClick={choice.onSelect} fullWidth variant="contained">
+							<Button onClick={() => choice.onSelect(dispatch)} fullWidth variant="contained">
 								{choice.description}
 							</Button>
 						</Box>

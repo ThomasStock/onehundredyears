@@ -1,4 +1,6 @@
 import { Box, Typography } from '@material-ui/core'
+import { Dispatch } from 'react'
+import { AddFamiliyAction } from '../../reducer'
 import { registerEvent } from '../registry'
 import { EventConfig } from '../types'
 import { getRandomFromArray } from '../utils'
@@ -9,7 +11,7 @@ interface Stats {
 	intelligence?: number
 }
 
-interface Parent {
+export interface Parent {
 	description: (male?: boolean) => string
 	stats: Stats
 }
@@ -38,46 +40,49 @@ const parents: Parent[] = [
 	},
 ]
 
-const pickParents: EventConfig = {
-	key: 'pickParents',
-	title: 'Een koppel bezoekt het weeshuis.',
-	description: () => {
-		const dad = getRandomFromArray(parents)
-		const mom = getRandomFromArray(parents)
-		return (
-			<>
-				<Typography>
-					De vader is {dad.description(true)}. De mama is {mom.description(false)}.
-				</Typography>
-				<Box marginTop={1}>
-					<Typography>Hoe gedraag je je?</Typography>
-				</Box>
-			</>
-		)
-	},
-	chance: 100,
-	age: {
-		min: 4,
-		max: 6,
-	},
-	choices: [
-		{
-			key: 'cute',
-			description: 'Wees schattig',
-			onSelect: () => {
-				console.log('pick cute')
-			},
+const createPickParents = (): EventConfig => {
+	const dad = getRandomFromArray(parents)
+	const mom = getRandomFromArray(parents)
+
+	return {
+		key: 'pickParents',
+		title: 'Een koppel bezoekt het weeshuis.',
+		description: () => {
+			return (
+				<>
+					<Typography>
+						De vader is {dad.description(true)}. De mama is {mom.description(false)}.
+					</Typography>
+					<Box marginTop={1}>
+						<Typography>Hoe gedraag je je?</Typography>
+					</Box>
+				</>
+			)
 		},
-		{
-			key: 'tantrum',
-			description: 'Begin hard te huilen',
-			onSelect: () => {
-				console.log('pick tantrum')
-			},
+		chance: 100,
+		age: {
+			min: 4,
+			max: 6,
 		},
-	],
+		choices: [
+			{
+				key: 'cute',
+				description: 'Wees schattig',
+				onSelect: (dispatch: Dispatch<AddFamiliyAction>) => {
+					dispatch({ type: 'addFamily', payload: { dad, mom } })
+				},
+			},
+			{
+				key: 'tantrum',
+				description: 'Begin hard te huilen',
+				onSelect: () => {
+					console.log('pick tantrum')
+				},
+			},
+		],
+	}
 }
 
-export default pickParents
+export default createPickParents
 
-registerEvent(pickParents)
+registerEvent(createPickParents())

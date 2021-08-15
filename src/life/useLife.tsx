@@ -51,6 +51,7 @@ const useLife = () => {
 
 	return {
 		...state,
+		dispatch,
 		currentEvent,
 		start,
 		stop,

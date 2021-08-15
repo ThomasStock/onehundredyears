@@ -1,5 +1,5 @@
 import dayjs, { Dayjs, OpUnitType } from 'dayjs'
-import { EventConfig, EventData } from './types'
+import { EventConfig, EventDate } from './types'
 
 const steps: OpUnitType[] = ['minute', 'hour', 'day', 'week', 'month', 'year']
 
@@ -26,7 +26,7 @@ export const generateEvent = (birthDate: Dayjs, { age, key }: EventConfig) => {
 	return { date, key }
 }
 
-export const getNextEvent = (events: EventData[]) => {
+export const getNextEvent = (events: EventDate[]) => {
 	return events[events.length - 1]
 }
 
