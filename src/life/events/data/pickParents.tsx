@@ -1,22 +1,20 @@
 import { Box, Typography } from '@material-ui/core'
 import { Dispatch } from 'react'
-import { AddFamiliyAction } from '../../reducer'
-import { registerEvent } from '../registry'
+import { AddFamiliyAction, Stats } from '../../reducer'
 import { EventConfig } from '../types'
 import { getRandomFromArray } from '../utils'
 
-interface Stats {
-	wealth?: number
-	love?: number
-	intelligence?: number
-}
-
-export interface Parent {
+export interface ParentConfig {
 	description: (male?: boolean) => string
 	stats: Stats
 }
 
-const parents: Parent[] = [
+export interface Parent {
+	description: string
+	stats: Stats
+}
+
+const parents: ParentConfig[] = [
 	{
 		description: (male) => (male ? 'baas van een stofzuiger fabriek' : 'bazin van een stofzuiger fabriek'),
 		stats: {
@@ -38,11 +36,28 @@ const parents: Parent[] = [
 			intelligence: 73,
 		},
 	},
+	{
+		description: (male) => (male ? 'metser' : 'werkt in een juwelierszaak'),
+		stats: {
+			wealth: 43,
+			intelligence: 41,
+			love: 58,
+		},
+	},
+	{
+		description: (male) => (male ? 'topvoetballer' : 'top 10 tennisster'),
+		stats: {
+			wealth: 92,
+			intelligence: 32,
+		},
+	},
 ]
 
-const createPickParents = (): EventConfig => {
-	const dad = getRandomFromArray(parents)
-	const mom = getRandomFromArray(parents)
+export const createPickParents = (): EventConfig => {
+	const dadConfig = getRandomFromArray(parents)
+	const dad = { ...dadConfig, description: dadConfig.description(true) }
+	const momConifg = getRandomFromArray(parents)
+	const mom = { ...momConifg, description: momConifg.description(false) }
 
 	return {
 		key: 'pickParents',
@@ -51,7 +66,7 @@ const createPickParents = (): EventConfig => {
 			return (
 				<>
 					<Typography>
-						De vader is {dad.description(true)}. De mama is {mom.description(false)}.
+						De vader is {dad.description}. De mama is {mom.description}.
 					</Typography>
 					<Box marginTop={1}>
 						<Typography>Hoe gedraag je je?</Typography>
@@ -69,6 +84,7 @@ const createPickParents = (): EventConfig => {
 				key: 'cute',
 				description: 'Wees schattig',
 				onSelect: (dispatch: Dispatch<AddFamiliyAction>) => {
+					console.log('dispatching add family')
 					dispatch({ type: 'addFamily', payload: { dad, mom } })
 				},
 			},
@@ -82,7 +98,3 @@ const createPickParents = (): EventConfig => {
 		],
 	}
 }
-
-export default createPickParents
-
-registerEvent(createPickParents())

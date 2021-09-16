@@ -3,6 +3,7 @@ import { useEffect, useMemo, useReducer } from 'react'
 import { init, reducer } from './reducer'
 import anime, { AnimeInstance } from 'animejs'
 import { getNextEvent } from './events/utils'
+import './events/registerEvents'
 
 let animation: AnimeInstance
 
@@ -12,6 +13,7 @@ const useLife = () => {
 	const nextEvent = useMemo(() => getNextEvent(events), [events])
 	const currentEvent = nextEvent.date.valueOf() === date.valueOf() ? nextEvent : undefined
 
+	console.log('state', state)
 	useEffect(() => start(), [])
 
 	const start = () => {

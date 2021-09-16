@@ -1,12 +1,17 @@
 import { Dayjs } from 'dayjs'
-import createPickParents from './events/data/pickParents'
 import { Parent } from './events/data/pickParents'
-import { EventDate } from './events/types'
+import { getEventConfig } from './events/registry'
+import { EventConfig, EventDate } from './events/types'
 import { generateEvent } from './events/utils'
 
+export interface Stats {
+	wealth?: number
+	love?: number
+	intelligence?: number
+}
 interface Family {
-	dad: Parent | undefined
-	mom: Parent | undefined
+	dad?: Parent
+	mom?: Parent
 }
 interface State {
 	birthDate: Dayjs
@@ -21,8 +26,8 @@ export const init = (birthDate: Dayjs): State => {
 		birthDate,
 		date: birthDate,
 		running: false,
-		events: [generateEvent(birthDate, createPickParents())],
-		family: { dad: undefined, mom: undefined },
+		events: [generateEvent(birthDate, getEventConfig('pickParents') as EventConfig)],
+		family: {},
 	}
 }
 
