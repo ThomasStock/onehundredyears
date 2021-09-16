@@ -30,4 +30,4 @@ export const getNextEvent = (events: EventDate[]) => {
 	return events[events.length - 1]
 }
 
-export const getRandomFromArray = (array: any[]) => array[Math.floor(Math.random() * array.length)]
+export const getRandomFromArray = <T>(array: T[]) => array[Math.floor(Math.random() * array.length)]
