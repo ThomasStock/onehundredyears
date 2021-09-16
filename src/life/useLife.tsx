@@ -4,6 +4,8 @@ import { init, reducer } from './reducer'
 import anime, { AnimeInstance } from 'animejs'
 import { getNextEvent } from './events/utils'
 
+import './events/registerEvents'
+
 const QUICK_START = true
 
 let animation: AnimeInstance

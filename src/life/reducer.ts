@@ -31,9 +31,24 @@ export const init = (birthDate: Dayjs): State => {
 	}
 }
 
-export type AddFamiliyAction = { type: 'addFamily'; payload: Partial<Family> }
+type Action<T = undefined> = {
+	type: string
+	payload?: T
+}
 
-export const reducer = (state: State, action: AddFamiliyAction | { type: string; payload?: any }): State => {
+const action =
+	<T = undefined>(type: string) =>
+	(payload: T): Action<T> => ({
+		type,
+		payload,
+	})
+
+export const addFamily = action<Partial<Family>>('addFamily')
+export const progress = action<Dayjs>('progress')
+
+//export const newReducer = createReducer(state)
+
+export const reducer = (state: State, action: Action): State => {
 	switch (action.type) {
 		case 'start':
 			return { ...state, running: true }
