@@ -4,6 +4,8 @@ import { init, reducer } from './reducer'
 import anime, { AnimeInstance } from 'animejs'
 import { getNextEvent } from './events/utils'
 
+const QUICK_START = true
+
 let animation: AnimeInstance
 
 const useLife = () => {
@@ -12,7 +14,11 @@ const useLife = () => {
 	const nextEvent = useMemo(() => getNextEvent(events), [events])
 	const currentEvent = nextEvent.date.valueOf() === date.valueOf() ? nextEvent : undefined
 
-	useEffect(() => start(), [])
+	useEffect(() => {
+		if (QUICK_START) {
+			start()
+		}
+	}, [])
 
 	const start = () => {
 		dispatch({ type: 'start' })
@@ -26,7 +32,7 @@ const useLife = () => {
 		animation = anime({
 			targets: currentAnimation,
 			ticks: nextEvent.date.valueOf(),
-			duration: 40,
+			duration: QUICK_START ? 200 : 3000,
 
 			change: (anim) => {
 				dispatch({ type: 'progress', payload: dayjs(currentAnimation.ticks) })
