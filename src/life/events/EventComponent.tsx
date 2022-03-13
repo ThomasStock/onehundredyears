@@ -1,11 +1,11 @@
 import { Box, Button, Typography } from '@material-ui/core'
-import { Dispatch } from 'react'
+import { AppDispatch } from '../../store'
 import registry from './registry'
 import { EventConfig, EventDate } from './types'
 
 interface Props {
 	eventDate: EventDate
-	dispatch: Dispatch<{ type: string; payload: any }>
+	dispatch: AppDispatch
 }
 
 const EventComponent = ({ eventDate, dispatch }: Props) => {

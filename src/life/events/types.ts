@@ -1,5 +1,6 @@
 import { Dayjs } from 'dayjs'
-import React, { Dispatch } from 'react'
+import React from 'react'
+import { AppDispatch } from '../../store'
 
 interface EventAge {
 	min?: number
@@ -9,7 +10,7 @@ interface EventAge {
 interface ChoiceData {
 	key: string
 	description: string
-	onSelect: (dispatch: Dispatch<{ type: string; payload: any }>) => void
+	onSelect: (dispatch: AppDispatch) => void
 }
 
 export interface EventConfig {

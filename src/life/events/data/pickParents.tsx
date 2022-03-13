@@ -1,6 +1,5 @@
 import { Box, Typography } from '@material-ui/core'
-import { Dispatch } from 'react'
-import { AddFamiliyAction, Stats } from '../../reducer'
+import { lifeActions, Stats } from '../../reducer'
 import { EventConfig } from '../types'
 import { getRandomFromArray } from '../utils'
 
@@ -83,9 +82,9 @@ export const createPickParents = (): EventConfig => {
 			{
 				key: 'cute',
 				description: 'Wees schattig',
-				onSelect: (dispatch: Dispatch<AddFamiliyAction>) => {
+				onSelect: (dispatch) => {
 					console.log('dispatching add family')
-					dispatch({ type: 'addFamily', payload: { dad, mom } })
+					dispatch(lifeActions.addFamily({ dad, mom }))
 				},
 			},
 			{
