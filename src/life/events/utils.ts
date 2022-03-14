@@ -20,10 +20,10 @@ const getRandomAge = (minAge = 0, maxAge = 100) => {
 	return dayjs.duration(ms)
 }
 
-export const generateEvent = (birthDate: Dayjs, { age, key }: EventConfig) => {
+export const generateEvent = (birthDate: number, { age, key }: EventConfig) => {
 	const randomAge = getRandomAge(age.min, age.max)
-	const date = birthDate.add(randomAge)
-	return { date, key }
+	const dateTicks = dayjs(birthDate).add(randomAge).valueOf()
+	return { dateTicks, key }
 }
 
 export const getNextEvent = (events: EventDate[]) => {

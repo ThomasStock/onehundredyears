@@ -10,7 +10,10 @@ dayjs.locale('nl-be')
 dayjs.extend(duration)
 
 const App = () => {
-	const { date, start, stop, running, birthDate, events, currentEvent, dispatch } = useLife()
+	const { dateTicks, start, stop, running, birthDateTicks, events, currentEvent, dispatch } = useLife()
+
+	const date = dayjs(dateTicks)
+	const birthDate = dayjs(birthDateTicks)
 
 	const toggleTime = () => (running ? stop() : start())
 
@@ -33,7 +36,7 @@ const App = () => {
 				{[...events].reverse().map((event, index) => (
 					<li key={index}>
 						<Typography variant="caption" color={index ? 'textSecondary' : 'textPrimary'}>
-							{event.date.format('LL LT')}: {event.key}
+							{dayjs(event.dateTicks).format('LL LT')}: {event.key}
 						</Typography>
 					</li>
 				))}

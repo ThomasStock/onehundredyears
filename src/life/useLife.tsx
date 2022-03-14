@@ -1,4 +1,3 @@
-import dayjs from 'dayjs'
 import { useEffect, useMemo } from 'react'
 import { lifeActions, selectLife } from './reducer'
 import anime, { AnimeInstance } from 'animejs'
@@ -15,13 +14,13 @@ let animation: AnimeInstance
 const useLife = () => {
 	const dispatch = useAppDispatch()
 	const state = useAppSelector(selectLife)
-	const { date, events, birthDate } = state
+	const { dateTicks, events, birthDateTicks } = state
 
 	const nextEvent = useMemo(() => getNextEvent(events), [events])
-	const currentEvent = nextEvent?.date.valueOf() === date.valueOf() ? nextEvent : undefined
+	const currentEvent = nextEvent?.dateTicks === dateTicks ? nextEvent : undefined
 
 	useEffect(() => {
-		dispatch(lifeActions.newEvent(generateEvent(birthDate, getEventConfig('pickParents') as EventConfig)))
+		dispatch(lifeActions.newEvent(generateEvent(birthDateTicks, getEventConfig('pickParents') as EventConfig)))
 
 		if (QUICK_START) {
 			start()
@@ -36,14 +35,14 @@ const useLife = () => {
 			return
 		}
 
-		const currentAnimation = { ticks: date.valueOf() }
+		const currentAnimation = { ticks: dateTicks }
 		animation = anime({
 			targets: currentAnimation,
-			ticks: nextEvent?.date.valueOf(),
+			ticks: nextEvent?.dateTicks,
 			duration: QUICK_START ? 200 : 3000,
 
 			change: (_anim) => {
-				dispatch(lifeActions.progress(dayjs(currentAnimation.ticks)))
+				dispatch(lifeActions.progress(currentAnimation.ticks))
 			},
 			easing: function (el, i, total) {
 				const pow = Math.pow
@@ -52,7 +51,7 @@ const useLife = () => {
 				}
 			},
 			complete: () => {
-				dispatch(lifeActions.progress(nextEvent.date))
+				dispatch(lifeActions.progress(nextEvent.dateTicks))
 				dispatch(lifeActions.stop())
 			},
 		})

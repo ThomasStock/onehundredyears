@@ -1,8 +1,6 @@
-import dayjs, { Dayjs } from 'dayjs'
+import dayjs from 'dayjs'
 import { Parent } from './events/data/pickParents'
-import { getEventConfig } from './events/registry'
-import { EventConfig, EventDate } from './events/types'
-import { generateEvent } from './events/utils'
+import { EventDate } from './events/types'
 
 import { createSlice, PayloadAction } from '@reduxjs/toolkit'
 import type { RootState } from '../store'
@@ -17,68 +15,22 @@ interface Family {
 	mom?: Parent
 }
 interface State {
-	birthDate: Dayjs
-	date: Dayjs
+	birthDateTicks: number
+	dateTicks: number
 	running: boolean
 	events: EventDate[]
 	family: Family
 }
 
-const birthDate = dayjs()
+const birthDateTicks = dayjs().valueOf()
 
 const initialState: State = {
-	birthDate,
-	date: birthDate,
+	birthDateTicks,
+	dateTicks: birthDateTicks,
 	running: false,
 	events: [],
 	family: {} as Family,
 }
-
-// export const born = (birthDate: Dayjs): State => {
-// 	return {
-// 		birthDate,
-// 		date: birthDate,
-// 		running: false,
-// 		events: [generateEvent(birthDate, getEventConfig('pickParents') as EventConfig)],
-// 		family: {},
-// 	}
-// }
-
-// type Action<T = undefined> = {
-// 	type: string
-// 	payload?: T
-// }
-
-// const action =
-// 	<T = undefined>(type: string) =>
-// 	(payload: T): Action<T> => ({
-// 		type,
-// 		payload,
-// 	})
-
-// export const addFamily = action<Partial<Family>>('addFamily')
-// export const progress = action<Dayjs>('progress')
-
-//export const newReducer = createReducer(state)
-
-// const reducer = (state: State, action: Action): State => {
-// 	switch (action.type) {
-// 		case 'start':
-// 			return { ...state, running: true }
-// 		case 'stop':
-// 			return { ...state, running: false }
-// 		case 'progress':
-// 			return { ...state, date: action.payload }
-// 		case 'newEvent':
-// 			return { ...state, events: [...state.events, action.payload] }
-// 		case 'addFamily':
-// 			return { ...state, family: { ...action.payload } }
-// 		case 'reset':
-// 			return init(action.payload)
-// 		default:
-// 			throw new Error()
-// 	}
-// }
 
 export const lifeSlice = createSlice({
 	name: 'life',
@@ -90,8 +42,8 @@ export const lifeSlice = createSlice({
 		stop: (state) => {
 			state.running = false
 		},
-		progress: (state, action: PayloadAction<Dayjs>) => {
-			state.date = action.payload
+		progress: (state, action: PayloadAction<number>) => {
+			state.dateTicks = action.payload
 		},
 		newEvent: (state, action: PayloadAction<EventDate>) => {
 			state.events = [...state.events, action.payload]

@@ -1,4 +1,3 @@
-import { Dayjs } from 'dayjs'
 import React from 'react'
 import { AppDispatch } from '../../store'
 
@@ -24,5 +23,5 @@ export interface EventConfig {
 
 export interface EventDate {
 	key: string
-	date: Dayjs
+	dateTicks: number
 }
