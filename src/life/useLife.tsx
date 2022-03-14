@@ -1,35 +1,38 @@
 import { useEffect, useMemo } from 'react'
 import { lifeActions, selectLife } from './reducer'
 import anime, { AnimeInstance } from 'animejs'
-import { generateEvent, getNextEvent } from './events/utils'
+import { getNextEvent } from './events/utils'
 
 import { useAppDispatch, useAppSelector } from '../hooks'
-import { getEventConfig } from './events/registry'
-import { EventConfig } from './events/types'
 
-const QUICK_START = false
+const QUICK_START = true
 
 let animation: AnimeInstance
 
 const useLife = () => {
 	const dispatch = useAppDispatch()
 	const state = useAppSelector(selectLife)
-	const { dateTicks, events, birthDateTicks } = state
+	const { dateTicks, events, running } = state
 
 	const nextEvent = useMemo(() => getNextEvent(events), [events])
 	const currentEvent = nextEvent?.dateTicks === dateTicks ? nextEvent : undefined
 
 	useEffect(() => {
-		dispatch(lifeActions.newEvent(generateEvent(birthDateTicks, getEventConfig('pickParents') as EventConfig)))
+		// const pickParents = generateEvent(birthDateTicks, getEventConfig('pickParents') as EventConfig)
+		// dispatch(lifeActions.newEvent(pickParents))
 
 		if (QUICK_START) {
-			start()
+			dispatch(lifeActions.start())
 		}
 	}, [])
 
-	const start = () => {
-		dispatch(lifeActions.start())
+	useEffect(() => {
+		if (running) {
+			start()
+		}
+	}, [running])
 
+	const start = () => {
 		if (animation && !animation.completed) {
 			animation.play()
 			return

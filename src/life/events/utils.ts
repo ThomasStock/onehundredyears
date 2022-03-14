@@ -14,6 +14,7 @@ export const makeRandomEvent = (currentDate: Dayjs) => {
 }
 
 const getRandomAge = (minAge = 0, maxAge = 100) => {
+	console.log('dayjs', dayjs, minAge, maxAge)
 	const min = dayjs.duration(minAge, 'years').asMilliseconds()
 	const max = dayjs.duration(maxAge, 'years').asMilliseconds()
 	const ms = Math.random() * (max - min) + min

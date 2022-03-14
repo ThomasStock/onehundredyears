@@ -1,9 +1,13 @@
 import dayjs from 'dayjs'
 import { Parent } from './events/data/pickParents'
-import { EventDate } from './events/types'
+import { EventConfig, EventDate } from './events/types'
 
 import { createSlice, PayloadAction } from '@reduxjs/toolkit'
 import type { RootState } from '../store'
+import { generateEvent } from './events/utils'
+import { getEventConfig } from './events/registry'
+
+import './events/registerEvents'
 
 export interface Stats {
 	wealth?: number
@@ -23,12 +27,14 @@ interface State {
 }
 
 const birthDateTicks = dayjs().valueOf()
+console.log('getting events', getEventConfig('pickParents'))
+const pickParents = generateEvent(birthDateTicks, getEventConfig('pickParents') as EventConfig)
 
 const initialState: State = {
 	birthDateTicks,
 	dateTicks: birthDateTicks,
 	running: false,
-	events: [],
+	events: [pickParents],
 	family: {} as Family,
 }
 

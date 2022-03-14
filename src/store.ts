@@ -1,6 +1,5 @@
 import { configureStore } from '@reduxjs/toolkit'
 
-import './life/events/registerEvents'
 import lifeReducer from './life/reducer'
 
 export const store = configureStore({
